@@ -458,7 +458,7 @@ def bms_parse_data(inc_data):
         error, info = cid2_rtn(RTN)
         if error:
             # print(error)
-            raise Exception("cid2_rtn error: " + error)
+            raise Exception("cid2_rtn error: " + str(error))
         
         LCHKSUM = inc_data[9]
 
