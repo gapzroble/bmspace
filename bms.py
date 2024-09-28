@@ -46,8 +46,7 @@ repub_discovery = 0
 bms_version = ''
 bms_sn = ''
 pack_sn = ''
-packs = 1
-total_packs = 2
+packs = 2
 cells = 16
 temps = 6
 
@@ -177,7 +176,7 @@ def ha_discovery():
         device['sw_version'] = bms_version
         disc_payload['device'] = device
 
-        for p in range (1,total_packs+1):
+        for p in range (1,packs+1):
 
             # for i in range(0,cells):
             #     disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
@@ -728,10 +727,7 @@ def bms_getAnalogData(bms,batNumber):
             if p > 1:
                 cells_prev = cells
 
-            try:
-                cells = int(inc_data[byte_index:byte_index+2],16)
-            except:
-                pass
+            cells = int(inc_data[byte_index:byte_index+2],16)
 
             #Possible remove this next test as were now testing for the INFOFLAG at the end
             if p > 1:
@@ -1116,7 +1112,7 @@ while code_running == True:
     if bms_connected == True:
         if mqtt_connected == True:
 
-            success, data = bms_getAnalogData(bms,batNumber=total_packs)
+            success, data = bms_getAnalogData(bms,batNumber=packs)
             if success != True:
                 print("Error retrieving BMS analog data: " + data)
             time.sleep(scan_interval/3)
