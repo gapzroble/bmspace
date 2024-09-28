@@ -572,7 +572,6 @@ def bms_request(bms, ver=b"\x32\x35",adr=b"\x30\x31",cid1=b"\x34\x36",cid2=b"\x4
 
     global bms_connected
     global debug_output
-    global current_pack
     
     request = b'\x7e'
     request += ver
@@ -705,9 +704,6 @@ def bms_getAnalogData(bms,batNumber):
     soc = []
     soh = []
 
-    battery = bytes(format(batNumber, '02X'), 'ASCII')
-    print("------------- Get analog info for battery: ", battery)
-
     try:
         v_cell = {}
         t_cell = {}
@@ -715,8 +711,9 @@ def bms_getAnalogData(bms,batNumber):
         for p in range(1,packs+1):
             byte_index = 2
 
-            pack_adr = bytes(format(p, '02X'), 'ASCII')
-            success, inc_data = bms_request(bms,adr=pack_adr,cid2=constants.cid2PackAnalogData,info=battery)
+            battery = bytes(format(p, '02X'), 'ASCII')
+            print("------------- Get analog info for battery: ", battery)
+            success, inc_data = bms_request(bms,adr=battery,cid2=constants.cid2PackAnalogData,info=bytes(format(255, '02X'), 'ASCII'))
             if success == False:
                 return(False,inc_data)
 
