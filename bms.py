@@ -457,8 +457,8 @@ def bms_parse_data(inc_data):
         RTN = inc_data[7:9]
         error, info = cid2_rtn(RTN)
         if error:
-            print(error)
-            raise Exception(error)
+            # print(error)
+            raise Exception("cid2_rtn error: " + error)
         
         LCHKSUM = inc_data[9]
 
@@ -499,9 +499,9 @@ def bms_parse_data(inc_data):
         if debug_output > 1:
             print("Calc CHKSUM: ", calc_CHKSUM)
     except Exception as e:
-        print(traceback.format_exc())
         if debug_output > 0:
             print("Error1 calculating CHKSUM using data: ", inc_data)
+        print(traceback.format_exc())
         return(False,"Error1 calculating CHKSUM: " + str(e))
 
     if calc_CHKSUM == False:
@@ -563,8 +563,8 @@ def lchksum_calc(lenid):
         chksum = format(chksum, 'X')
 
     except:
-        print(traceback.format_exc())
         print("Error calculating LCHKSUM using LENID: ", lenid)
+        print(traceback.format_exc())
         return(False)
 
     return(chksum)
@@ -634,8 +634,8 @@ def bms_getPackNumber(bms):
     try:
         packNumber = int(INFO,16)
     except:
-        print(traceback.format_exc())
         print("Error extracting total battery count in pack")
+        print(traceback.format_exc())
         return(False,"Error extracting total battery count in pack")
 
     return(success,packNumber)
@@ -725,7 +725,10 @@ def bms_getAnalogData(bms,batNumber):
             if p > 1:
                 cells_prev = cells
 
-            cells = int(inc_data[byte_index:byte_index+2],16)
+            try:
+                cells = int(inc_data[byte_index:byte_index+2],16)
+            except:
+                pass
 
             #Possible remove this next test as were now testing for the INFOFLAG at the end
             if p > 1:
@@ -848,8 +851,8 @@ def bms_getAnalogData(bms,batNumber):
                 byte_index += 2
 
     except Exception as e:
-        print(traceback.format_exc())
         print("Error parsing BMS analog data: ", str(e))
+        print(traceback.format_exc())
         return(False,"Error parsing BMS analog data: " + str(e))
 
     if print_initial:
@@ -1071,8 +1074,8 @@ def bms_getWarnInfo(bms):
                 byte_index += 2
 
     except Exception as e:
-        print(traceback.format_exc())
         print("Error parsing BMS warning data: ", str(e))
+        print(traceback.format_exc())
         return False, "Error parsing BMS warning data: " + str(e)
 
     return True,True
