@@ -24,9 +24,9 @@ if os.path.exists('/data/options.json'):
         config = json.load(file)
         print("Config: " + json.dumps(config))
 
-elif os.path.exists('pace-bms-dev\\config.yaml'):
+elif os.path.exists('config.yaml'):
     print("Loading config.yaml")
-    with open(r'pace-bms-dev\\config.yaml') as file:
+    with open(r'config.yaml') as file:
         config = yaml.load(file, Loader=yaml.FullLoader)['options']
         
 else:
