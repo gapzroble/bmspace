@@ -695,7 +695,7 @@ def bms_getAnalogData(bms,batNumber):
     global cells
     global temps
     global packs
-    byte_index = 2
+
     i_pack = []
     v_pack = []
     i_remain_cap = []
@@ -713,6 +713,7 @@ def bms_getAnalogData(bms,batNumber):
         t_cell = {}
 
         for p in range(1,packs+1):
+            byte_index = 2
 
             pack_adr = bytes(format(p, '02X'), 'ASCII')
             success, inc_data = bms_request(bms,adr=pack_adr,cid2=constants.cid2PackAnalogData,info=battery)
