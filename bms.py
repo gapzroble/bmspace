@@ -10,6 +10,7 @@ import json
 import atexit
 import sys
 import constants
+import traceback
 
 print("Starting up...")
 
@@ -408,6 +409,7 @@ def chksum_calc(data):
         if debug_output > 0:
             print("Error calculating CHKSUM using data: " + data)
             print("Error details: ", str(e))
+        print(traceback.format_exc())
         return(False)
 
     return(chksum)
@@ -497,6 +499,7 @@ def bms_parse_data(inc_data):
         if debug_output > 1:
             print("Calc CHKSUM: ", calc_CHKSUM)
     except Exception as e:
+        print(traceback.format_exc())
         if debug_output > 0:
             print("Error1 calculating CHKSUM using data: ", inc_data)
         return(False,"Error1 calculating CHKSUM: " + str(e))
@@ -560,7 +563,7 @@ def lchksum_calc(lenid):
         chksum = format(chksum, 'X')
 
     except:
-
+        print(traceback.format_exc())
         print("Error calculating LCHKSUM using LENID: ", lenid)
         return(False)
 
@@ -631,6 +634,7 @@ def bms_getPackNumber(bms):
     try:
         packNumber = int(INFO,16)
     except:
+        print(traceback.format_exc())
         print("Error extracting total battery count in pack")
         return(False,"Error extracting total battery count in pack")
 
@@ -651,6 +655,7 @@ def bms_getVersion(comms):
         client.publish(config['mqtt_base_topic'] + "/bms_version",bms_version)
         print("BMS Version: " + bms_version)
     except:
+        print(traceback.format_exc())
         return(False,"Error extracting BMS version")
 
     return(success,bms_version)
@@ -676,6 +681,7 @@ def bms_getSerial(comms):
         print("Pack Serial Number: " + pack_sn)
 
     except:
+        print(traceback.format_exc())
         return(False,"Error extracting BMS version", False)
 
     return(success,bms_sn,pack_sn)
@@ -728,6 +734,7 @@ def bms_getAnalogData(bms,batNumber):
                     cells = int(inc_data[byte_index:byte_index+2],16)
                     if cells != cells_prev:
                         print("Error parsing BMS analog data: Cannot read multiple packs")
+                        print(traceback.format_exc())
                         return(False,"Error parsing BMS analog data: Cannot read multiple packs")
 
             if print_initial:
@@ -841,6 +848,7 @@ def bms_getAnalogData(bms,batNumber):
                 byte_index += 2
 
     except Exception as e:
+        print(traceback.format_exc())
         print("Error parsing BMS analog data: ", str(e))
         return(False,"Error parsing BMS analog data: " + str(e))
 
@@ -890,6 +898,7 @@ def bms_getPackCapacity(bms):
 
     except Exception as e:
         print("Error parsing BMS pack capacity data: ", str(e))
+        print(traceback.format_exc())
         return False, "Error parsing BMS pack capacity data: " + str(e)
 
     return True,True
@@ -1062,6 +1071,7 @@ def bms_getWarnInfo(bms):
                 byte_index += 2
 
     except Exception as e:
+        print(traceback.format_exc())
         print("Error parsing BMS warning data: ", str(e))
         return False, "Error parsing BMS warning data: " + str(e)
 
