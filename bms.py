@@ -169,10 +169,10 @@ def ha_discovery():
         disc_payload['availability_topic'] = config['mqtt_base_topic'] + "/availability"
 
         device = {}
-        device['manufacturer'] = "DongJin"
+        device['manufacturer'] = "DongJin Power"
         device['model'] = "48V100AH LiFePO4"
-        device['identifiers'] = "bmspace_" + bms_sn
-        device['name'] = "DongJin Power 48V100AH LiFePO4"
+        device['identifiers'] = "lifepo4_" + bms_sn
+        device['name'] = "Battery"
         device['sw_version'] = bms_version
         disc_payload['device'] = device
 
@@ -336,15 +336,15 @@ def ha_discovery():
             # disc_payload['payload_off'] = "0"
             # client.publish(config['mqtt_ha_discovery_topic']+"/binary_sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
+            # Pack data
+            disc_payload.pop('payload_on')
+            disc_payload.pop('payload_off')
+
             disc_payload['name'] = "Pack " + str(p) + " Cell Max Volt Diff"
             disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_cells_max_diff_calc"
             disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/cells_max_diff_calc"
             disc_payload['unit_of_measurement'] = "mV"
             client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
-
-            # Pack data
-            disc_payload.pop('payload_on')
-            disc_payload.pop('payload_off')
 
             # disc_payload['name'] = "Pack Remaining Capacity"
             # disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_i_remain_cap"
@@ -711,9 +711,9 @@ def bms_getAnalogData(bms,batNumber):
             if success == False:
                 return(False,inc_data)
 
-            packs = int(inc_data[byte_index:byte_index+2],16)
-            if print_initial:
-                print("Packs: " + str(packs))
+            # packs = int(inc_data[byte_index:byte_index+2],16)
+            # if print_initial:
+            #     print("Packs: " + str(packs))
             byte_index += 2
 
             if p > 1:
@@ -772,17 +772,6 @@ def bms_getAnalogData(bms,batNumber):
                 client.publish(config['mqtt_base_topic'] + "/pack_" + str(p) + "/temps/temp_" + str(i+1) ,str(round(t_cell[(p-1,i)],1)))
                 if print_initial:
                     print("Pack " + str(p) + ", Temp" + str(i+1) + ": " + str(round(t_cell[(p-1,i)],1)) + " ℃")
-
-            # t_mos= (int(inc_data[byte_index:byte_index+4],16))/160-273
-            # client.publish(config['mqtt_base_topic'] + "/t_mos",str(round(t_mos,1)))
-            # if print_initial:
-            #     print("T Mos: " + str(t_mos) + " Deg")
-
-            # t_env= (int(inc_data[byte_index:byte_index+4],16))/160-273
-            # client.publish(config['mqtt_base_topic'] + "/t_env",str(round(t_env,1)))
-            # offset += 7
-            # if print_initial:
-            #     print("T Env: " + str(t_env) + " Deg")
 
             i_pack.append(int(inc_data[byte_index:byte_index+4],16))
             byte_index += 4
