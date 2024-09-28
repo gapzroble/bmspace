@@ -626,7 +626,7 @@ def bms_request(bms, ver=b"\x32\x35",adr=b"\x30\x31",cid1=b"\x34\x36",cid2=b"\x4
 
 def bms_getPackNumber(bms):
 
-    print("Get pack number")
+    print("------------- Get pack number")
     success, INFO = bms_request(bms,cid2=constants.cid2PackNumber)
 
     if success == False:
@@ -645,7 +645,7 @@ def bms_getVersion(comms):
 
     global bms_version
 
-    print("Get bms version")
+    print("------------- Get bms version")
     success, INFO = bms_request(bms,cid2=constants.cid2SoftwareVersion)
 
     if success == False:
@@ -667,7 +667,7 @@ def bms_getSerial(comms):
     global bms_sn
     global pack_sn
 
-    print("Get bms serial")
+    print("------------- Get bms serial")
     success, INFO = bms_request(bms,cid2=constants.cid2SerialNumber)
 
     if success == False:
@@ -706,7 +706,7 @@ def bms_getAnalogData(bms,batNumber):
     soh = []
 
     battery = bytes(format(batNumber, '02X'), 'ASCII')
-    print("Get analog info for battery: ", battery)
+    print("------------- Get analog info for battery: ", battery)
 
     success, inc_data = bms_request(bms,cid2=constants.cid2PackAnalogData,info=battery)
 
@@ -867,7 +867,7 @@ def bms_getPackCapacity(bms):
 
     byte_index = 0
 
-    print("Get pack capacity")
+    print("------------- Get pack capacity")
     success, inc_data = bms_request(bms,cid2=constants.cid2PackCapacity) # Seem to always reply with pack 1 data, even with ADR= 0 or FF and INFO= '' or FF
 
     if success == False:
@@ -916,7 +916,7 @@ def bms_getWarnInfo(bms):
     packsW = 1
     warnings = ""
 
-    print("Get warn info")
+    print("------------- Get warn info")
     success, inc_data = bms_request(bms,cid2=constants.cid2WarnInfo,info=b'FF')
 
     if success == False:
@@ -1116,7 +1116,7 @@ while code_running == True:
     if bms_connected == True:
         if mqtt_connected == True:
 
-            success, data = bms_getAnalogData(bms,batNumber=255)
+            success, data = bms_getAnalogData(bms,batNumber=total_packs)
             if success != True:
                 print("Error retrieving BMS analog data: " + data)
             time.sleep(scan_interval/3)
