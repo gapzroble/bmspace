@@ -438,8 +438,6 @@ def cid2_rtn(rtn):
 def bms_parse_data(inc_data):
 
     global debug_output
-
-    #inc_data = b'~2501460070DC00020D100A0FF40FEA100E10040FF50FFD10010FFD0FE50FF5100A1001060BD20BD20BD40BD40BF80C1AFF7ECFCF258B02271001372710600D0FFA0FFC0FFB0FFC0FFE0FFB0FFA0FFA0FFB0FFD0FFC0FFB0FFB060BEF0BF10BEF0BED0BF70C04FDB1D02E29A9022AF80\r'
     
     try:
         
@@ -625,7 +623,6 @@ def bms_request(bms, ver=b"\x32\x35",adr=b"\x30\x31",cid1=b"\x34\x36",cid2=b"\x4
 
 def bms_getPackNumber(bms):
 
-    print("------------- Get pack number")
     success, INFO = bms_request(bms,cid2=constants.cid2PackNumber)
 
     if success == False:
@@ -644,7 +641,6 @@ def bms_getVersion(comms):
 
     global bms_version
 
-    print("------------- Get bms version")
     success, INFO = bms_request(bms,cid2=constants.cid2SoftwareVersion)
 
     if success == False:
@@ -666,7 +662,6 @@ def bms_getSerial(comms):
     global bms_sn
     global pack_sn
 
-    print("------------- Get bms serial")
     success, INFO = bms_request(bms,cid2=constants.cid2SerialNumber)
 
     if success == False:
@@ -712,7 +707,6 @@ def bms_getAnalogData(bms,batNumber):
             byte_index = 2
 
             battery = bytes(format(p, '02X'), 'ASCII')
-            print("------------- Get analog info for battery: ", battery)
             success, inc_data = bms_request(bms,adr=battery,cid2=constants.cid2PackAnalogData,info=bytes(format(255, '02X'), 'ASCII'))
             if success == False:
                 return(False,inc_data)
@@ -861,7 +855,6 @@ def bms_getPackCapacity(bms):
 
     byte_index = 0
 
-    print("------------- Get pack capacity")
     success, inc_data = bms_request(bms,cid2=constants.cid2PackCapacity) # Seem to always reply with pack 1 data, even with ADR= 0 or FF and INFO= '' or FF
 
     if success == False:
@@ -910,13 +903,10 @@ def bms_getWarnInfo(bms):
     packsW = 1
     warnings = ""
 
-    print("------------- Get warn info")
     success, inc_data = bms_request(bms,cid2=constants.cid2WarnInfo,info=b'FF')
 
     if success == False:
         return(False,inc_data)
-
-    #inc_data = b'000210000000000000000000000000000000000600000000000000000000000E0000000000001110000000000000000000000000000000000600000000000000000000000E00000000000000'
 
     try:
 
@@ -1096,15 +1086,6 @@ if success != True:
     print("Error retrieving BMS and pack serial numbers. This is required for HA Discovery. Exiting...")
     quit()
 
-
-# Not used anymore
-# time.sleep(0.1)
-# success, data = bms_getPackNumber(bms)
-# if success == True:
-#     print("Batteries in pack: ", data)
-# else:
-#     print("Error retrieving number of batteries in pack")
-
 while code_running == True:
 
     if bms_connected == True:
@@ -1114,9 +1095,9 @@ while code_running == True:
             if success != True:
                 print("Error retrieving BMS analog data: " + data)
             time.sleep(scan_interval/3)
-            success, data = bms_getPackCapacity(bms)
-            if success != True:
-                print("Error retrieving BMS pack capacity: " + data)
+            # success, data = bms_getPackCapacity(bms)
+            # if success != True:
+            #     print("Error retrieving BMS pack capacity: " + data)
             time.sleep(scan_interval/3)
             success, data = bms_getWarnInfo(bms)
             if success != True:
