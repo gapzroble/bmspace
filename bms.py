@@ -572,6 +572,7 @@ def bms_request(bms, ver=b"\x32\x35",adr=b"\x30\x31",cid1=b"\x34\x36",cid2=b"\x4
 
     global bms_connected
     global debug_output
+    global current_pack
     
     request = b'\x7e'
     request += ver
@@ -707,22 +708,21 @@ def bms_getAnalogData(bms,batNumber):
     battery = bytes(format(batNumber, '02X'), 'ASCII')
     print("------------- Get analog info for battery: ", battery)
 
-    success, inc_data = bms_request(bms,cid2=constants.cid2PackAnalogData,info=battery)
-
-    if success == False:
-        return(False,inc_data)
-
     try:
-
-        packs = int(inc_data[byte_index:byte_index+2],16)
-        if print_initial:
-            print("Packs: " + str(packs))
-        byte_index += 2
-
         v_cell = {}
         t_cell = {}
 
         for p in range(1,packs+1):
+
+            pack_adr = bytes(format(p, '02X'), 'ASCII')
+            success, inc_data = bms_request(bms,adr=pack_adr,cid2=constants.cid2PackAnalogData,info=battery)
+            if success == False:
+                return(False,inc_data)
+
+            packs = int(inc_data[byte_index:byte_index+2],16)
+            if print_initial:
+                print("Packs: " + str(packs))
+            byte_index += 2
 
             if p > 1:
                 cells_prev = cells
@@ -1112,7 +1112,7 @@ while code_running == True:
     if bms_connected == True:
         if mqtt_connected == True:
 
-            success, data = bms_getAnalogData(bms,batNumber=packs)
+            success, data = bms_getAnalogData(bms,batNumber=255)
             if success != True:
                 print("Error retrieving BMS analog data: " + data)
             time.sleep(scan_interval/3)
