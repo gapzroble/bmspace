@@ -1,5 +1,3 @@
-
-
 import paho.mqtt.client as mqtt
 import socket
 import time
@@ -48,7 +46,8 @@ bms_version = ''
 bms_sn = ''
 pack_sn = ''
 packs = 1
-cells = 13
+total_packs = 2
+cells = 16
 temps = 6
 
 
@@ -177,7 +176,7 @@ def ha_discovery():
         device['sw_version'] = bms_version
         disc_payload['device'] = device
 
-        for p in range (1,packs+1):
+        for p in range (1,total_packs+1):
 
             for i in range(0,cells):
                 disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1) + " Voltage"
