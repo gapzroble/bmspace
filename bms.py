@@ -707,13 +707,11 @@ def bms_getAnalogData(bms,batNumber):
             byte_index = 2
 
             battery = bytes(format(p, '02X'), 'ASCII')
-            success, inc_data = bms_request(bms,adr=battery,cid2=constants.cid2PackAnalogData,info=bytes(format(255, '02X'), 'ASCII'))
+            success, inc_data = bms_request(bms,adr=battery,cid2=constants.cid2PackAnalogData,info=b'FF')
+
             if success == False:
                 return(False,inc_data)
 
-            # packs = int(inc_data[byte_index:byte_index+2],16)
-            # if print_initial:
-            #     print("Packs: " + str(packs))
             byte_index += 2
 
             if p > 1:
@@ -888,23 +886,19 @@ def bms_getPackCapacity(bms):
 
 def bms_getWarnInfo(bms):
 
-    byte_index = 2
-    packsW = 1
-    warnings = ""
-
-    success, inc_data = bms_request(bms,cid2=constants.cid2WarnInfo,info=b'FF')
-
-    if success == False:
-        return(False,inc_data)
-
     try:
-
-        packsW = int(inc_data[byte_index:byte_index+2],16)
-        if print_initial:
-            print("Packs for warnings: " + str(packs))
-        byte_index += 2
-
         for p in range(1,packs+1):
+            byte_index = 2
+            warnings = ""
+
+            battery = bytes(format(p, '02X'), 'ASCII')
+            success, inc_data = bms_request(bms,adr=battery,cid2=constants.cid2WarnInfo,info=b'FF')
+
+            if success == False:
+                return(False,inc_data)
+
+            byte_index += 2
+
 
             cellsW = int(inc_data[byte_index:byte_index+2],16)
             byte_index += 2
