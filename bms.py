@@ -178,12 +178,12 @@ def ha_discovery():
 
         for p in range (1,total_packs+1):
 
-            for i in range(0,cells):
-                disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
-                disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_v_cell_" + str(i+1)
-                disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/v_cells/cell_" + str(i+1)
-                disc_payload['unit_of_measurement'] = "mV"
-                client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+            # for i in range(0,cells):
+            #     disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
+            #     disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_v_cell_" + str(i+1)
+            #     disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/v_cells/cell_" + str(i+1)
+            #     disc_payload['unit_of_measurement'] = "mV"
+            #     client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
             # for i in range(0,temps):
             #     disc_payload['name'] = "Pack " + str(p) + " Temperature " + str(i+1)
