@@ -177,7 +177,7 @@ def ha_discovery():
         disc_payload['device'] = device
 
         for p in range (1,packs+1):
-            disc_payload['device']['name'] = "Battery Pack " + str(p)
+            # disc_payload['device']['name'] = "Battery Pack " + str(p)
 
             # for i in range(0,cells):
             #     disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
