@@ -171,12 +171,13 @@ def ha_discovery():
         device = {}
         device['manufacturer'] = "DongJin Power"
         device['model'] = "48V100AH LiFePO4"
-        device['identifiers'] = "lifepo4_" + bms_sn
+        device['identifiers'] = "bmspace_" + bms_sn
         device['name'] = "Battery"
         device['sw_version'] = bms_version
         disc_payload['device'] = device
 
         for p in range (1,packs+1):
+            disc_payload['device']['name'] = "Battery Pack " + str(p)
 
             # for i in range(0,cells):
             #     disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
