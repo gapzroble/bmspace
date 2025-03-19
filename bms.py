@@ -162,7 +162,6 @@ def ha_discovery():
 
     global ha_discovery_enabled
     global packs
-    global config
     global bms_sn
 
     if ha_discovery_enabled:
@@ -180,12 +179,11 @@ def ha_discovery():
         disc_payload['device'] = device
 
         temp_bms_sn = bms_sn
-        # mqtt_base_topic = config['mqtt_base_topic']
 
         for p in range (1,packs+1):
             bms_sn = temp_bms_sn + "_P" + str(p)
             disc_payload['device']['identifiers'] = "bmspace_" + bms_sn
-            # config['mqtt_base_topic'] = mqtt_base_topic + str(p)
+            device['model'] = "48V100AH LiFePO4 P." + str(p)
 
             for i in range(0,cells):
                 disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
