@@ -183,7 +183,8 @@ def ha_discovery():
         for p in range (1,packs+1):
             bms_sn = temp_bms_sn + "_P" + str(p)
             disc_payload['device']['identifiers'] = "bmspace_" + bms_sn
-            device['model'] = "48V100AH LiFePO4 P." + str(p)
+            disc_payload['device']['model'] = "48V100AH LiFePO4 P." + str(p)
+            disc_payload['device']['name'] = "Battery" + str(p)
 
             for i in range(0,cells):
                 disc_payload['name'] = "Pack " + str(p) + " Cell " + str(i+1).rjust(2, '0')  + " Voltage"
