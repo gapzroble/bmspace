@@ -343,6 +343,18 @@ def ha_discovery():
             disc_payload.pop('payload_on')
             disc_payload.pop('payload_off')
 
+            disc_payload['name'] = "Pack " + str(p) + " Cell Max Volt"
+            disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_cell_max_volt"
+            disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/cell_max_volt"
+            disc_payload['unit_of_measurement'] = "mV"
+            client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+
+            disc_payload['name'] = "Pack " + str(p) + " Cell Min Volt"
+            disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_cell_min_volt"
+            disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/cell_min_volt"
+            disc_payload['unit_of_measurement'] = "mV"
+            client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+
             disc_payload['name'] = "Pack " + str(p) + " Cell Max Volt Diff"
             disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_cells_max_diff_calc"
             disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/cells_max_diff_calc"
@@ -758,6 +770,8 @@ def bms_getAnalogData(bms,batNumber):
             #Calculate cells max diff volt
             cell_max_diff_volt = cell_max_volt - cell_min_volt
             client.publish(config['mqtt_base_topic'] + "/pack_" + str(p) + "/cells_max_diff_calc" ,str(cell_max_diff_volt))
+            client.publish(config['mqtt_base_topic'] + "/pack_" + str(p) + "/cell_min_volt" ,str(cell_min_volt))
+            client.publish(config['mqtt_base_topic'] + "/pack_" + str(p) + "/cell_max_volt" ,str(cell_max_volt))
             if print_initial:
                 print("Pack " + str(p) +", Cell Max Diff Volt Calc: " + str(cell_max_diff_volt) + " mV")
 
